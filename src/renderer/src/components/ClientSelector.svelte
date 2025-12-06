@@ -1,7 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
 
-  // Default is in Updater.svelte
   export let selectedClient = ''
   let isOpen = false
   let triggerEl
@@ -41,6 +40,7 @@
     selectedClient = client
     isOpen = false
     selectedEl.classList.remove('active')
+    window.api.setSetting('selectedClient', client)
   }
 
   function handleOutsideClick(event) {
@@ -53,6 +53,7 @@
   onMount(async () => {
     window.addEventListener('click', handleOutsideClick)
     clientsList = await window.api.getConfig('CLIENTS')
+    selectedClient = await window.api.getSetting('selectedClient')
   })
 
   onDestroy(() => {

@@ -3,8 +3,19 @@ import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import fs from 'fs'
 import crypto from 'crypto'
+import __Store from 'electron-store'
+const Store = __Store.default || __Store
+
 import icon from '../../resources/icon.png?asset'
 import config from '../../launcher-config.json'
+
+const store = new Store({
+  defaults: {
+    selectedClient: '64-bit OpenGL',
+    autoPlay: false,
+    closeOnLaunch: false
+  }
+})
 
 function createWindow() {
   // Create the browser window.
@@ -101,10 +112,14 @@ app.whenReady().then(() => {
     await fs.promises.writeFile(filePath, Buffer.from(data))
   })
 
-  ipcMain.handle('start-game', (e, client) => {
+  ipcMain.handle('start-game', () => {
     const sessionPath = app.isPackaged ? app.getPath('userData') : app.getAppPath()
-    const clientPath = join(sessionPath, 'otclient', config.CLIENTS[client])
+    const clientPath = join(sessionPath, 'otclient', config.CLIENTS[store.get('selectedClient')])
     shell.openPath(clientPath)
+
+    if (store.get('closeOnLaunch') && !store.get('autoPlay')) {
+      win.close()
+    }
   })
 
   ipcMain.handle('clean-client', async (e, manifest) => {
@@ -166,6 +181,14 @@ app.whenReady().then(() => {
 
     await Promise.all(tasks)
     return localFiles
+  })
+
+  ipcMain.handle('get-setting', (e, key) => {
+    return store.get(key)
+  })
+
+  ipcMain.handle('set-setting', (e, key, value) => {
+    store.set(key, value)
   })
 })
 

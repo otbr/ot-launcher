@@ -6,3 +6,4 @@ out
 *.log*
 .env
 launcher-config.json
+otclient

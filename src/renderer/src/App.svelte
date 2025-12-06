@@ -3,12 +3,12 @@
   import Socials from './components/Socials.svelte'
   import NewsPanel from './components/NewsPanel.svelte'
   import Updater from './components/Updater.svelte'
-  import CloseButton from './components/CloseButton.svelte'
+  import TopButtons from './components/TopButtons.svelte'
 </script>
 
 <Logo />
 <div class="container">
-  <CloseButton />
+  <TopButtons />
   <Socials />
   <NewsPanel />
   <Updater />

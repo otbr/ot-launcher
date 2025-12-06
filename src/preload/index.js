@@ -9,9 +9,11 @@ const api = {
   close: () => electronAPI.ipcRenderer.invoke('close-window'),
   openExternal: (url) => shell.openExternal(url),
   writeFile: (path, data) => electronAPI.ipcRenderer.invoke('write-file', path, data),
-  startGame: (executable) => electronAPI.ipcRenderer.invoke('start-game', executable),
+  startGame: () => electronAPI.ipcRenderer.invoke('start-game'),
   cleanClient: (manifest) => electronAPI.ipcRenderer.invoke('clean-client', manifest),
-  readClientFiles: () => electronAPI.ipcRenderer.invoke('read-client-files')
+  readClientFiles: () => electronAPI.ipcRenderer.invoke('read-client-files'),
+  getSetting: (key) => electronAPI.ipcRenderer.invoke('get-setting', key),
+  setSetting: (key, value) => electronAPI.ipcRenderer.invoke('set-setting', key, value)
 }
 
 if (process.contextIsolated) {

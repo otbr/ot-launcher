@@ -18,7 +18,6 @@
   let totalFilesToWrite = 0
   let speedInterval = null
   let downloadFinished = false
-  let selectedClient = '64-bit OpenGL'
 
   const pool = new DownloadPool({
     concurrency: Math.min(6, navigator.hardwareConcurrency),
@@ -54,6 +53,13 @@
     }
   })
 
+  async function autoPlayIfNeeded() {
+    const autoPlay = await window.api.getSetting('autoPlay')
+    if (autoPlay) {
+      window.api.startGame()
+    }
+  }
+
   function checkIfFinished() {
     if (downloadFinished) return
 
@@ -65,6 +71,7 @@
       stopSpeedTracker()
       latestFileLabel.set('Client is up to date')
       pool.stop()
+      autoPlayIfNeeded()
     }
   }
 
@@ -119,6 +126,8 @@
       totalWrittenBytes.set(totalBytesToDownload)
       totalWrittenFiles.set(1)
       latestFileProgress.set(1)
+
+      autoPlayIfNeeded()
       return
     }
 
@@ -187,12 +196,12 @@
     <div class="file">{$latestFileLabel}</div>
   </div>
   <div class="play">
-    <ClientSelector bind:selectedClient />
+    <ClientSelector />
     <Button
       style="height:100%;font-size: 32px;"
       label="Play"
       disabled={!downloadFinished}
-      onClick={() => window.api.startGame(selectedClient)}
+      onClick={() => window.api.startGame()}
     />
   </div>
 </div>

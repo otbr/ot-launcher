@@ -6,9 +6,6 @@
 
 <style>
   :global(.close-button) {
-    position: absolute;
-    right: 0;
-    top: calc(var(--logo-margin) + 10px);
     font-size: 14px;
   }
 </style>
